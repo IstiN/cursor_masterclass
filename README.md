@@ -1,221 +1,168 @@
-# Voice Chat Assistant with Gemini AI
+# Voice Chat Assistant - Gemini AI
 
-A modern voice-enabled chat interface powered by Google's Gemini AI with integrated text-to-speech capabilities and knowledge base support.
+A modern, single-page voice chat application powered by Google's Gemini AI with a beautiful glassmorphism UI design.
 
-## ✨ Features
+## 🌟 Features
 
-- **🎤 Voice Input**: Real-time speech recognition using Web Speech API
-- **🔊 Voice Output**: Natural text-to-speech using Gemini TTS API
-- **🧠 AI Conversation**: Powered by Gemini 2.0 Flash for intelligent responses
-- **📚 Knowledge Base**: Context-aware responses using custom knowledge base
-- **💾 Session Management**: Persistent conversation history
-- **📱 Responsive Design**: Beautiful minimal UI that works on all devices
-- **🔒 Secure**: API keys handled server-side for security
+- **🎤 Voice Input**: Speech-to-text using Web Speech API
+- **🗣️ Text-to-Speech**: AI-generated voice responses using Gemini TTS
+- **💬 Real-time Chat**: Instant messaging with AI responses
+- **🎨 Glassmorphism UI**: Modern, beautiful interface with backdrop blur effects
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile devices
+- **🔒 Privacy-First**: API keys stored locally in browser storage
+- **⚙️ Customizable**: Configure system instructions and AI behavior
+- **🌐 No Backend Required**: Runs entirely in the browser
 
-## 🚀 Quick Start
+## 🚀 Live Demo
 
-### Prerequisites
+Visit the live application: [https://istin.github.io/cursor_masterclass](https://istin.github.io/cursor_masterclass)
 
-- Node.js (v16 or higher)
-- Google Gemini API key
-- Modern web browser with speech recognition support
+## 🛠️ Setup
 
-### Installation
+### Quick Start
 
-1. **Clone or download the project files**
+1. **Visit the application** at the GitHub Pages link above
+2. **Enter your Gemini API key** (get one from [Google AI Studio](https://makersuite.google.com/app/apikey))
+3. **Optionally configure system instructions** to customize AI behavior
+4. **Start chatting!** Use text or voice input
 
-2. **Install dependencies**
+### Local Development
+
+1. **Clone the repository**:
    ```bash
-   npm install
+   git clone https://github.com/IstiN/cursor_masterclass.git
+   cd cursor_masterclass
    ```
 
-3. **Set up your Gemini API key**
+2. **Open `index.html`** in your browser or serve it with a local server:
    ```bash
-   # Copy the example file
-   cp gemini.key.example gemini.key
+   # Using Python
+   python -m http.server 8000
    
-   # Edit gemini.key and add your actual API key
-   echo "YOUR_ACTUAL_GEMINI_API_KEY" > gemini.key
+   # Using Node.js
+   npx serve .
    ```
 
-4. **Start the server**
-   ```bash
-   npm start
-   ```
-   
-   Or for development with auto-reload:
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   Navigate to `http://localhost:3000`
+3. **Configure your API key** when prompted
 
 ## 🔑 Getting a Gemini API Key
 
 1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Sign in with your Google account
 3. Click "Create API Key"
-4. Copy the generated API key
-5. Paste it into your `gemini.key` file
+4. Copy the generated key
+5. Paste it into the application setup form
 
-## 📖 Knowledge Base
+## 🎛️ Configuration
 
-The system uses `knowledge_base.txt` to provide context-aware responses. The current knowledge base contains information about a mobile app with features like:
+### System Instructions
 
-- User authentication and login flows
-- Dashboard and navigation
-- Shipment management
-- Case management
-- Account settings
-- Pickup services
-- Error handling
+You can customize the AI's behavior by providing system instructions such as:
 
-You can modify `knowledge_base.txt` to customize the AI's knowledge for your specific use case.
+- **Role Definition**: "You are a helpful coding assistant specializing in JavaScript and web development"
+- **Personality**: "Be friendly, encouraging, and provide detailed explanations"
+- **Constraints**: "Keep responses concise and under 100 words unless asked for details"
+- **Domain Expertise**: "Focus on providing accurate technical information about web technologies"
 
-## 🎯 Usage
+### Local Storage
 
-### Text Chat
-1. Type your message in the input field
-2. Press Enter or click the Send button
-3. The AI will respond with context from the knowledge base
-4. Response will be automatically spoken using TTS
-
-### Voice Chat
-1. Click the microphone button to start voice input
-2. Speak your question clearly
-3. The system will transcribe your speech to text
-4. AI responds both with text and voice
-
-### Session Management
-- Conversations are automatically saved per session
-- Each browser session maintains its own conversation history
-- History is kept for the duration of the server session
-
-## 🛠️ API Endpoints
-
-- `GET /` - Serve the chat interface
-- `POST /api/chat` - Send chat messages
-- `POST /api/tts` - Generate speech from text
-- `GET /api/health` - Check server health
-- `GET /api/history/:sessionId` - Get conversation history
-- `DELETE /api/history/:sessionId` - Clear conversation history
+The application stores the following data locally in your browser:
+- `gemini_api_key`: Your Gemini API key (encrypted in storage)
+- `system_requirements`: Custom system instructions
 
 ## 🏗️ Architecture
 
-```
-Frontend (HTML/CSS/JS)
-├── Voice Recognition (Web Speech API)
-├── Audio Playback (HTML5 Audio)
-└── Session Management
+### Single Page Application (SPA)
+- **Frontend**: Pure HTML, CSS, and JavaScript
+- **No Backend**: Direct API calls to Gemini from the browser
+- **Client-side Storage**: LocalStorage for configuration
+- **Real-time Voice**: Web Speech API integration
 
-Backend (Node.js/Express)
-├── Gemini Text Generation API
-├── Gemini TTS API
-├── Knowledge Base Integration
-└── Conversation History Management
-```
+### Key Components
+- **VoiceChatApp Class**: Main application controller
+- **Speech Recognition**: Web Speech API for voice input
+- **Gemini Integration**: Direct API calls for text generation and TTS
+- **UI Management**: Dynamic message rendering and state management
 
-## 🎨 Customization
+### API Integration
+- **Text Generation**: `generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`
+- **Text-to-Speech**: `generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent`
 
-### Changing the Voice
-Edit `server.js` and modify the TTS configuration:
-```javascript
-voice_config: {
-  prebuilt_voice_config: {
-    voice_name: "Puck" // Choose from 30 available voices
-  }
-}
-```
+## 🚀 Deployment
 
-Available voices include: Kore, Puck, Zephyr, Charon, Fenrir, Aoede, and 24 others.
+The application automatically deploys to GitHub Pages using GitHub Actions:
 
-### Updating Knowledge Base
-Simply edit `knowledge_base.txt` with your content. The server will automatically load the new knowledge base on restart.
+### Automatic Deployment
+- **Trigger**: Push to `main` branch
+- **Build**: Simple static file deployment
+- **URL**: `https://[username].github.io/cursor_masterclass`
 
-### Styling
-Modify the CSS in `chat-prototype-v1-minimal.html` to customize the appearance. The design uses CSS custom properties for easy theming.
+### Manual Deployment
+You can deploy to any static hosting service:
+- **Netlify**: Drag and drop the folder
+- **Vercel**: Connect GitHub repository
+- **GitHub Pages**: Enable in repository settings
 
-## 🔧 Configuration
+## 🎨 UI Features
 
-### Environment Variables
-- `PORT` - Server port (default: 3000)
-- `NODE_ENV` - Environment mode (development/production)
+### Glassmorphism Design
+- **Backdrop Blur**: Beautiful frosted glass effects
+- **Gradient Backgrounds**: Vibrant, animated color gradients
+- **Smooth Animations**: Micro-interactions and transitions
+- **Responsive Layout**: Mobile-first design approach
 
-### Model Settings
-You can adjust the AI behavior by modifying the generation config in `server.js`:
-```javascript
-generationConfig: {
-  temperature: 0.7,    // Creativity (0.0-1.0)
-  topK: 40,           // Diversity control
-  topP: 0.95,         // Nucleus sampling
-  maxOutputTokens: 1024 // Response length
-}
-```
+### Voice Controls
+- **Voice Recording**: Click microphone to start/stop recording
+- **Visual Feedback**: Recording state with animations
+- **Auto-transcription**: Speech converted to text automatically
 
-## 🐛 Troubleshooting
+### Chat Interface
+- **Message Bubbles**: Distinct styling for user and AI messages
+- **Avatars**: Emoji-based user and AI avatars
+- **Typing Indicators**: Loading animation while AI responds
+- **Auto-scroll**: Automatically scrolls to latest messages
 
-### Common Issues
+## 🔧 Browser Support
 
-**"Gemini API key not configured"**
-- Check that `gemini.key` file exists and contains your API key
-- Ensure there are no extra spaces or newlines in the key file
+### Required Features
+- **Web Speech API**: For voice input (Chrome, Safari, Edge)
+- **Fetch API**: For API calls (all modern browsers)
+- **CSS Backdrop Filter**: For glassmorphism effects (modern browsers)
+- **Local Storage**: For configuration persistence
 
-**Voice recognition not working**
-- Use Chrome or Edge browser (best support)
-- Ensure microphone permissions are granted
-- Check that you're using HTTPS in production
-
-**TTS not playing**
-- Check browser audio permissions
-- Ensure speakers/headphones are connected
-- Try refreshing the page
-
-**Knowledge base not loading**
-- Verify `knowledge_base.txt` exists in the project root
-- Check server logs for file reading errors
-- Ensure proper file encoding (UTF-8)
-
-### Browser Compatibility
-
-- **Voice Recognition**: Chrome, Edge (best support), Firefox (limited)
-- **Audio Playback**: All modern browsers
-- **UI**: All modern browsers with CSS Grid support
-
-## 📝 Development
-
-### Adding New Features
-
-1. **New API Endpoints**: Add routes in `server.js`
-2. **Frontend Features**: Modify the JavaScript in the HTML file
-3. **Styling**: Update CSS custom properties for consistent theming
-
-### Code Structure
-
-- `server.js` - Main backend server
-- `chat-prototype-v1-minimal.html` - Frontend interface
-- `knowledge_base.txt` - AI knowledge context
-- `package.json` - Dependencies and scripts
-
-## 📄 License
-
-MIT License - feel free to use and modify for your projects.
+### Recommended Browsers
+- **Chrome 60+**: Full feature support
+- **Safari 14+**: Full feature support
+- **Firefox 90+**: Limited voice support
+- **Edge 79+**: Full feature support
 
 ## 🤝 Contributing
 
-1. Fork the project
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit changes**: `git commit -m 'Add amazing feature'`
+4. **Push to branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Google Gemini AI**: For providing the powerful language model and TTS capabilities
+- **Glassmorphism Design**: Inspired by modern UI/UX trends
+- **Web Speech API**: For enabling voice input functionality
 
 ## 📞 Support
 
-For issues related to:
-- **Gemini API**: Check [Google AI documentation](https://ai.google.dev/docs)
-- **Speech Recognition**: Verify browser compatibility
-- **Setup Issues**: Ensure all prerequisites are met
+If you encounter any issues or have questions:
+
+1. **Check the browser console** for error messages
+2. **Verify your API key** is correct and has proper permissions
+3. **Ensure your browser supports** required features
+4. **Open an issue** on GitHub with details about the problem
 
 ---
 
-Built with ❤️ using Google Gemini AI, Node.js, and modern web technologies. 
+**Built with ❤️ using modern web technologies and Gemini AI** 
