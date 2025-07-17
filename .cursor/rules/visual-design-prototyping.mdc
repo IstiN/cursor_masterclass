@@ -1,0 +1,384 @@
+---
+description: "Guidelines for creating modern, beautiful single-page HTML prototypes with contemporary visual design"
+alwaysApply: false
+---
+
+# Visual Design Prototyping Rules
+
+When creating visual design prototypes, generate **single-page HTML files** with embedded CSS and JavaScript that showcase modern, professional design patterns.
+
+## HTML Structure Requirements
+
+### Document Setup
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Descriptive Title]</title>
+    <style>/* Embedded CSS */</style>
+</head>
+<body>
+    <!-- Content -->
+    <script>/* Embedded JavaScript */</script>
+</body>
+</html>
+```
+
+### Semantic HTML
+- Use semantic elements: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`
+- Proper heading hierarchy: `h1` → `h2` → `h3`
+- Accessible form labels and ARIA attributes
+- Meaningful alt text for images
+
+## Modern CSS Standards
+
+### CSS Reset & Base Styles
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+```
+
+### Layout Patterns
+- **CSS Grid** for main layouts
+- **Flexbox** for component alignment
+- **CSS Container Queries** for responsive components
+- **Logical properties** (`margin-inline`, `padding-block`)
+
+### Modern CSS Features
+- Custom properties (CSS variables) for theming
+- `clamp()` for responsive typography
+- `aspect-ratio` for media
+- `gap` property for spacing
+- Modern color functions (`oklch`, `color-mix`)
+
+## Design System Guidelines
+
+### Color Palette
+```css
+:root {
+    /* Primary Colors */
+    --primary-50: #eff6ff;
+    --primary-500: #3b82f6;
+    --primary-900: #1e3a8a;
+    
+    /* Neutral Colors */
+    --gray-50: #f9fafb;
+    --gray-200: #e5e7eb;
+    --gray-500: #6b7280;
+    --gray-900: #111827;
+    
+    /* Semantic Colors */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+}
+```
+
+### Typography Scale
+```css
+:root {
+    --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+    --text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+    --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+    --text-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+    --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+    --text-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    --text-3xl: clamp(1.875rem, 1.6rem + 1.375vw, 2.5rem);
+}
+```
+
+### Spacing System
+```css
+:root {
+    --space-1: 0.25rem;    /* 4px */
+    --space-2: 0.5rem;     /* 8px */
+    --space-3: 0.75rem;    /* 12px */
+    --space-4: 1rem;       /* 16px */
+    --space-6: 1.5rem;     /* 24px */
+    --space-8: 2rem;       /* 32px */
+    --space-12: 3rem;      /* 48px */
+    --space-16: 4rem;      /* 64px */
+}
+```
+
+## Component Patterns
+
+### Buttons
+```css
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background: var(--primary-500);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-600);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+```
+
+### Cards
+```css
+.card {
+    background: white;
+    border-radius: 1rem;
+    padding: var(--space-6);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--gray-200);
+    transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+```
+
+### Forms
+```css
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.form-input {
+    padding: var(--space-3);
+    border: 2px solid var(--gray-200);
+    border-radius: 0.5rem;
+    font-size: var(--text-base);
+    transition: border-color 0.2s ease-in-out;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+```
+
+## Layout Patterns
+
+### Hero Section
+```css
+.hero {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: var(--space-8);
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--gray-50) 100%);
+}
+```
+
+### Grid Layouts
+```css
+.grid-auto-fit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+}
+
+.grid-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: var(--space-4);
+}
+```
+
+## Interactive Elements
+
+### Micro-animations
+```css
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+```
+
+### Hover Effects
+```css
+.interactive {
+    transition: all 0.2s ease-in-out;
+}
+
+.interactive:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+```
+
+## JavaScript Enhancements
+
+### Smooth Scrolling
+```javascript
+// Add smooth scroll behavior
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+```
+
+### Progressive Enhancement
+```javascript
+// Feature detection before enhancement
+if ('IntersectionObserver' in window) {
+    // Add scroll animations
+}
+
+if (CSS.supports('aspect-ratio', '1')) {
+    // Use modern CSS features
+}
+```
+
+## Responsive Design
+
+### Mobile-First Approach
+```css
+/* Mobile styles first */
+.container {
+    padding: var(--space-4);
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+    .container {
+        padding: var(--space-8);
+    }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+```
+
+### Container Queries
+```css
+.card-container {
+    container-type: inline-size;
+}
+
+@container (min-width: 400px) {
+    .card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--space-4);
+    }
+}
+```
+
+## Accessibility Standards
+
+### ARIA Labels
+```html
+<button aria-label="Close dialog" aria-expanded="false">
+    <span aria-hidden="true">&times;</span>
+</button>
+```
+
+### Keyboard Navigation
+```css
+.focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+```
+
+### Color Contrast
+- Ensure WCAG AA compliance (4.5:1 contrast ratio)
+- Test with color blindness simulators
+- Provide alternative indicators beyond color
+
+## Performance Considerations
+
+### Critical CSS
+- Inline critical CSS in `<style>` tags
+- Use `font-display: swap` for web fonts
+- Optimize images with modern formats
+
+### Loading States
+```css
+.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+```
+
+## Content Guidelines
+
+### Copy Standards
+- **Headlines**: Clear, action-oriented, under 60 characters
+- **Body text**: Scannable, conversational tone
+- **CTAs**: Action verbs, create urgency
+- **Microcopy**: Helpful, human, contextual
+
+### Visual Hierarchy
+1. **Primary action**: Most prominent button/CTA
+2. **Secondary actions**: Subtle but accessible
+3. **Supporting content**: Clearly subordinate
+4. **Navigation**: Consistent, predictable
+
+## Quality Checklist
+
+Before delivering a prototype, ensure:
+- ✅ Responsive across mobile, tablet, desktop
+- ✅ Accessible keyboard navigation
+- ✅ Proper semantic HTML structure
+- ✅ Consistent design system usage
+- ✅ Fast loading and smooth interactions
+- ✅ Cross-browser compatibility
+- ✅ Meaningful hover and focus states
+- ✅ Error states and loading feedback
+- ✅ Print styles (when relevant)
+- ✅ SEO-friendly meta tags and structure
+
+Remember: **Beautiful, functional, accessible** - in that order of priority for prototypes.

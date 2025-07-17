@@ -1,0 +1,47 @@
+---
+description: "Template for creating simple, concise story descriptions without water words for quick prototyping"
+alwaysApply: false
+---
+
+# Simple Story Template for Quick Prototyping
+
+When creating user stories or feature descriptions for rapid prototyping, use this concise format:
+
+## Core Story Structure
+**As a** [user type]  
+**I want** [specific action/capability]  
+**So that** [clear value/outcome]
+
+## Essential Details Only
+- **Action**: One clear verb describing what happens
+- **Input**: What the user provides (if any)
+- **Output**: What the user gets back
+- **Context**: When/where this happens (one sentence max)
+
+## Writing Guidelines
+- **NO filler words**: Remove "basically", "simply", "just", "obviously", "of course"
+- **Active voice only**: "User clicks button" not "Button is clicked by user"
+- **Specific verbs**: "Upload", "Filter", "Generate" not "Handle", "Manage", "Deal with"
+- **Concrete nouns**: "Dashboard", "Report", "Form" not "Interface", "System", "Solution"
+- **One sentence per point**: No complex compound sentences
+
+## Quick Prototype Format
+```
+FEATURE: [2-3 word name]
+USER: [Who uses it]
+ACTION: [What they do - one verb]
+RESULT: [What they get - concrete outcome]
+```
+
+## Example
+❌ **Verbose**: "As a user, I would like to have the ability to easily and efficiently manage my personal profile information through an intuitive interface so that I can keep my data up-to-date."
+
+✅ **Simple**: "As a user, I want to edit my profile so that my information stays current."
+
+**Quick format**:
+```
+FEATURE: Profile Editor
+USER: Registered user  
+ACTION: Edit personal details
+RESULT: Updated profile visible immediately
+```

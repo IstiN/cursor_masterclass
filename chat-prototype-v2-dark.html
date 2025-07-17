@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Chat Interface - Dark Mode</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Dark Theme Colors */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #16213e;
+            --bg-card: rgba(26, 26, 46, 0.8);
+            
+            /* Neon Colors */
+            --neon-cyan: #00f5ff;
+            --neon-purple: #bf40bf;
+            --neon-green: #39ff14;
+            --neon-pink: #ff1493;
+            --neon-blue: #4d4dff;
+            
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3cc;
+            --text-muted: #808099;
+            
+            /* Accent Colors */
+            --accent-primary: var(--neon-cyan);
+            --accent-secondary: var(--neon-purple);
+            --success: var(--neon-green);
+            --warning: #ffcc00;
+            --error: var(--neon-pink);
+
+            /* Typography Scale */
+            --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+            --text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+            --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+            --text-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+            --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+
+            /* Spacing System */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+        }
+
+        body {
+            font-family: 'Courier New', monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(191, 64, 191, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-4);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            padding: var(--space-8) 0 var(--space-6);
+        }
+
+        .header h1 {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+            text-shadow: 0 0 20px var(--accent-primary);
+            position: relative;
+        }
+
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .header p {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            padding: var(--space-6);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(0, 245, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: var(--space-6);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-primary) transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .message {
+            display: flex;
+            gap: var(--space-3);
+            animation: fadeInUp 0.6s ease-out forwards, glowIn 0.6s ease-out forwards;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            max-width: 85%;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--text-sm);
+            flex-shrink: 0;
+            border: 2px solid;
+            font-family: monospace;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--accent-primary);
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, var(--success), var(--neon-green));
+            color: var(--bg-primary);
+            border-color: var(--success);
+            box-shadow: 0 0 20px var(--success);
+        }
+
+        .message-content {
+            padding: var(--space-3) var(--space-4);
+            border-radius: 1rem;
+            font-size: var(--text-base);
+            line-height: 1.5;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .message.ai .message-content {
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-bottom-left-radius: 0.25rem;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+        }
+
+        .message.user .message-content {
+            background: rgba(57, 255, 20, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            border-bottom-right-radius: 0.25rem;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+        }
+
+        .voice-indicator {
+            display: none;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            background: rgba(191, 64, 191, 0.1);
+            border: 2px solid var(--accent-secondary);
+            border-radius: 1rem;
+            margin-bottom: var(--space-4);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(191, 64, 191, 0.3);
+        }
+
+        .voice-indicator.active {
+            display: flex;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .voice-indicator span {
+            color: var(--accent-secondary);
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .waveform {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 30px;
+        }
+
+        .wave-bar {
+            width: 4px;
+            background: linear-gradient(to top, var(--accent-secondary), var(--neon-purple));
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--accent-secondary);
+        }
+
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 40%, 100% { 
+                height: 10px; 
+                background: linear-gradient(to top, var(--accent-secondary), var(--neon-purple));
+            }
+            20% { 
+                height: 30px; 
+                background: linear-gradient(to top, var(--neon-purple), var(--accent-primary));
+            }
+        }
+
+        .input-container {
+            display: flex;
+            gap: var(--space-3);
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            font-size: var(--text-base);
+            font-family: inherit;
+            resize: none;
+            min-height: 48px;
+            max-height: 120px;
+            transition: all 0.3s ease-in-out;
+            background: rgba(26, 26, 46, 0.6);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.2), 0 0 20px rgba(0, 245, 255, 0.3);
+            background: rgba(26, 26, 46, 0.8);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-3);
+            border: 2px solid;
+            border-radius: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            min-width: 48px;
+            min-height: 48px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-primary {
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .btn-primary:hover {
+            background: rgba(0, 245, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--accent-primary), 0 4px 15px rgba(0, 245, 255, 0.4);
+        }
+
+        .btn-mic {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-mic:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-mic.active {
+            background: rgba(255, 20, 147, 0.2);
+            color: var(--error);
+            border-color: var(--error);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 15px rgba(255, 20, 147, 0);
+                transform: scale(1.05);
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(255, 20, 147, 0);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glowIn {
+            from {
+                box-shadow: none;
+            }
+            to {
+                box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+            }
+        }
+
+        /* Terminal-style typing cursor */
+        .typing-cursor::after {
+            content: '|';
+            color: var(--accent-primary);
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: var(--space-8);
+            }
+            
+            .chat-container {
+                min-height: 600px;
+            }
+        }
+
+        /* Cyberpunk grid overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-overlay"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>NEURAL VOICE INTERFACE</h1>
+            <p>&gt; Cybernetic AI communication protocol activated</p>
+        </header>
+
+        <main class="chat-container">
+            <div class="voice-indicator" id="voiceIndicator">
+                <div class="waveform">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                </div>
+                <span>&gt; NEURAL_PROCESSING...</span>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-avatar">AI</div>
+                    <div class="message-content">Hello! I'm your neural AI assistant. Quantum-enabled voice processing is online. Initialize voice command by activating the neural microphone interface.</div>
+                </div>
+                <div class="message user">
+                    <div class="message-avatar">USR</div>
+                    <div class="message-content">How can I help you?</div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <textarea class="input-field" id="messageInput" placeholder="> Enter neural command..." rows="1"></textarea>
+                <button class="btn btn-mic" id="micButton" aria-label="Neural voice input">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C13.1 2 14 2.9 14 4V10C14 11.1 13.1 12 12 12C10.9 12 10 11.1 10 10V4C10 2.9 10.9 2 12 2M19 10V12C19 15.9 15.9 19 12 19S5 15.9 5 12V10H7V12C7 14.8 9.2 17 12 17S17 14.8 17 12V10H19M12 20V22H8V24H16V22H12V20Z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-primary" id="sendButton" aria-label="Transmit command">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+                    </svg>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const micButton = document.getElementById('micButton');
+        const sendButton = document.getElementById('sendButton');
+        const messageInput = document.getElementById('messageInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const voiceIndicator = document.getElementById('voiceIndicator');
+
+        let isVoiceMode = false;
+        let isRecording = false;
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Mic button functionality
+        micButton.addEventListener('click', function() {
+            if (!isRecording) {
+                startVoiceInput();
+            } else {
+                stopVoiceInput();
+            }
+        });
+
+        // Send button functionality
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function startVoiceInput() {
+            isRecording = true;
+            micButton.classList.add('active');
+            messageInput.placeholder = '> LISTENING_FOR_NEURAL_INPUT...';
+            messageInput.classList.add('typing-cursor');
+            
+            // Simulate voice recognition with cyberpunk flair
+            setTimeout(() => {
+                messageInput.value = "Execute weather query protocol";
+                stopVoiceInput();
+            }, 2500);
+        }
+
+        function stopVoiceInput() {
+            isRecording = false;
+            micButton.classList.remove('active');
+            messageInput.placeholder = '> Enter neural command...';
+            messageInput.classList.remove('typing-cursor');
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+
+            // Simulate AI response with cyberpunk voice processing
+            setTimeout(() => {
+                voiceIndicator.classList.add('active');
+                setTimeout(() => {
+                    voiceIndicator.classList.remove('active');
+                    addMessage("NEURAL_RESPONSE: Weather protocol initiated. However, real-time atmospheric data access is restricted in current security clearance. Recommend accessing external weather network nodes for comprehensive meteorological intelligence.", 'ai');
+                }, 3500);
+            }, 600);
+        }
+
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${sender === 'ai' ? 'AI' : 'USR'}</div>
+                <div class="message-content">${content}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Add some cyberpunk effects
+        function addRandomGlitch() {
+            const messages = document.querySelectorAll('.message-content');
+            if (messages.length > 0) {
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                randomMessage.style.textShadow = '0 0 10px var(--accent-primary)';
+                setTimeout(() => {
+                    randomMessage.style.textShadow = '';
+                }, 100);
+            }
+        }
+
+        // Subtle random glitch effects
+        setInterval(addRandomGlitch, 8000);
+
+        // Terminal-style startup sequence
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('.header h1');
+            header.style.opacity = '0';
+            setTimeout(() => {
+                header.style.transition = 'opacity 1s ease-in-out';
+                header.style.opacity = '1';
+            }, 500);
+        });
+    </script>
+</body>
+</html> 
