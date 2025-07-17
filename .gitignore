@@ -118,4 +118,7 @@ Thumbs.db
 *.wav
 *.mp3
 *.ogg
-*.m4a 
+*.m4a
+
+# Knowledge base and sensitive data
+knowledge_base.txt 
